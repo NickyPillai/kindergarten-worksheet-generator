@@ -18,9 +18,23 @@ export default function UploadPage() {
     const formData = new FormData()
     formData.append('file', file)
 
+    if (file.size > 4 * 1024 * 1024) {
+      setStatus('error')
+      setMessage('File is too large. Please use a PDF under 4 MB.')
+      return
+    }
+
     try {
       const res = await fetch('/api/upload', { method: 'POST', body: formData })
-      const data = await res.json()
+
+      let data: { error?: string; id?: string } = {}
+      try {
+        data = await res.json()
+      } catch {
+        if (res.status === 413) throw new Error('File is too large for the server (max 4 MB). Please use a smaller PDF.')
+        throw new Error(`Server error (HTTP ${res.status}). Please try again.`)
+      }
+
       if (!res.ok) throw new Error(data.error ?? 'Upload failed')
       setStatus('success')
       if (inputRef.current) inputRef.current.value = ''
