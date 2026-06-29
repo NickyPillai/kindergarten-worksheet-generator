@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </span>
             <Link
               href="/upload"
-              className="text-sm text-gray-600 hover:text-indigo-600 font-medium transition-colors"
+              className="hidden text-sm text-gray-600 hover:text-indigo-600 font-medium transition-colors"
             >
               Upload Guidelines
             </Link>
